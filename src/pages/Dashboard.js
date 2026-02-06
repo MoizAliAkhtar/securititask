@@ -3,6 +3,19 @@ import Header from "../components/Header/header";
 import PieChartBox from "../components/Charts/piechart";
 import LineChartBox from "../components/Charts/linechart";
 import { fetchDashboardData } from "../services/api";
+import BarChartBox from "../components/Charts/barchart";
+import AreaChartBox from "../components/Charts/areachart";
+import "./dashboard.css";
+import {
+    FaChartPie,
+    FaChartLine,
+    FaFileAlt,
+    FaBell,
+    FaPlug,
+    FaCog,
+    FaQuestionCircle,
+    FaUser,
+} from "react-icons/fa";
 
 function Dashboard() {
     const [data, setData] = useState(null);
@@ -35,7 +48,7 @@ function Dashboard() {
     }, []);
 
     const filterByDays = (data, days) => {
-        const now = new Date("2024-01-30"); // fixed for demo
+        const now = new Date("2024-01-30");
         return data.filter((item) => {
             const itemDate = new Date(item.date);
             const diff = (now - itemDate) / (1000 * 60 * 60 * 24);
@@ -48,7 +61,7 @@ function Dashboard() {
         setRefreshing(prev => ({ ...prev, [chartName]: true }));
         try {
             const result = await fetchDashboardData();
-            setData(result); // update the whole data
+            setData(result);
         } catch (err) {
             console.error(`Failed to refresh ${chartName} chart.`);
         } finally {
@@ -58,8 +71,8 @@ function Dashboard() {
 
     // Small refresh icon component
     const RefreshIcon = ({ onClick, isLoading }) => (
-        <button 
-            className="btn btn-sm btn-outline-primary ms-auto" 
+        <button
+            className="btn btn-sm btn-outline-primary ms-auto"
             style={{ fontSize: "0.8rem" }}
             onClick={onClick}
             disabled={isLoading}
@@ -67,36 +80,82 @@ function Dashboard() {
             {isLoading ? (
                 <span className="spinner-border spinner-border-sm"></span>
             ) : (
-                <i className="bi bi-arrow-clockwise"></i> // Bootstrap icon
+                <i className="bi bi-arrow-clockwise"></i>
             )}
         </button>
     );
 
+    // Calculate total from chart data
+    const getTotal = (arr) => {
+        if (!arr || arr.length === 0) return 0;
+
+        return arr.reduce((sum, item) => sum + item.value, 0);
+    };
+
+    const getAverage = (arr) => {
+        if (!arr || arr.length === 0) return 0;
+
+        return (
+            arr.reduce((sum, item) => sum + item.value, 0) /
+            arr.length
+        ).toFixed(1);
+    };
+
     return (
         <div className="d-flex min-vh-100">
             {/* Sidebar */}
-            <aside
-                className="bg-dark text-white p-3"
-                style={{ width: "220px", minHeight: "100vh" }}
-            >
-                <h5 className="mb-4">Dashboard</h5>
-                <ul className="nav flex-column">
-                    <li className="nav-item mb-2">
-                        <a className="nav-link text-white" href="#">Home</a>
+            <aside className="sidebar">
+
+                {/* Logo */}
+                <div className="sidebar-logo">
+                    A
+                </div>
+
+                {/* Menu */}
+                <ul className="sidebar-menu">
+
+                    <li className="sidebar-item active">
+                        <FaChartPie />
+                        <span>Dashboard</span>
                     </li>
-                    <li className="nav-item mb-2">
-                        <a className="nav-link text-white" href="#">Users</a>
+
+                    <li className="sidebar-item">
+                        <FaChartLine />
+                        <span>Analytics</span>
                     </li>
-                    <li className="nav-item mb-2">
-                        <a className="nav-link text-white" href="#">Logins</a>
+
+                    <li className="sidebar-item">
+                        <FaFileAlt />
+                        <span>Reports</span>
                     </li>
-                    <li className="nav-item mb-2">
-                        <a className="nav-link text-white" href="#">Queries</a>
+
+                    <li className="sidebar-item">
+                        <FaBell />
+                        <span>Alerts</span>
                     </li>
-                    <li className="nav-item mb-2">
-                        <a className="nav-link text-white" href="#">Settings</a>
+
+                    <li className="sidebar-item">
+                        <FaPlug />
+                        <span>Integrations</span>
                     </li>
+
                 </ul>
+
+                {/* Bottom */}
+                <div className="sidebar-bottom">
+
+                    <div className="sidebar-item">
+                        <FaCog />
+                        <span>Settings</span>
+                    </div>
+
+                    <div className="sidebar-item">
+                        <FaUser />
+                        <span>Profile</span>
+                    </div>
+
+                </div>
+
             </aside>
 
             {/* Main content */}
@@ -120,13 +179,25 @@ function Dashboard() {
 
                         {/* Users */}
                         <div className="col-md-6">
-                            <div className="card p-3 shadow-sm d-flex flex-column">
-                                <div className="d-flex align-items-center mb-2">
-                                    <h6 className="mb-0">Users</h6>
-                                    <RefreshIcon 
-                                        onClick={() => refreshChart("users")} 
-                                        isLoading={refreshing.users} 
+                            <div className="card p-3 shadow-sm d-flex flex-column dashboard-card"
+                            >
+                                <div className="d-flex justify-content-between align-items-center mb-2">
+
+                                    <div>
+                                        <h6 className="mb-0">Users</h6>
+
+                                        <small className="text-muted">
+                                            Total:{" "}
+                                            {data &&
+                                                getTotal(filterByDays(data.users, range))}
+                                        </small>
+                                    </div>
+
+                                    <RefreshIcon
+                                        onClick={() => refreshChart("users")}
+                                        isLoading={refreshing.users}
                                     />
+
                                 </div>
                                 <div style={{ height: "200px" }}>
                                     {data && <LineChartBox data={filterByDays(data.users, range)} xKey="date" />}
@@ -137,61 +208,122 @@ function Dashboard() {
                         {/* Logins */}
                         <div className="col-md-6">
                             <div className="card p-3 shadow-sm d-flex flex-column">
-                                <div className="d-flex align-items-center mb-2">
-                                    <h6 className="mb-0">Logins</h6>
-                                    <RefreshIcon 
-                                        onClick={() => refreshChart("logins")} 
-                                        isLoading={refreshing.logins} 
+                                <div className="d-flex justify-content-between align-items-center mb-2">
+
+                                    <div>
+                                        <h6 className="mb-0">Logins</h6>
+
+                                        <small className="text-muted">
+                                            Total:{" "}
+                                            {data &&
+                                                getTotal(filterByDays(data.logins, range))}
+                                        </small>
+                                    </div>
+
+                                    <RefreshIcon
+                                        onClick={() => refreshChart("logins")}
+                                        isLoading={refreshing.logins}
                                     />
+
                                 </div>
+
                                 <div style={{ height: "200px" }}>
-                                    {data && <LineChartBox data={filterByDays(data.logins, range)} xKey="date" />}
+                                    {data && (
+                                        <BarChartBox
+                                            data={filterByDays(data.logins, range)}
+                                            xKey="date"
+                                        />
+                                    )}
+
                                 </div>
                             </div>
                         </div>
 
                         {/* Queries */}
                         <div className="col-md-6 offset-md-3">
-                            <div className="card p-3 shadow-sm d-flex flex-column">
-                                <div className="d-flex align-items-center mb-2">
-                                    <h6 className="mb-0">Queries</h6>
-                                    <RefreshIcon 
-                                        onClick={() => refreshChart("queries")} 
-                                        isLoading={refreshing.queries} 
+                            <div className="card p-3 shadow-sm d-flex flex-column dashboard-card"
+                            >
+                                <div className="d-flex justify-content-between align-items-center mb-2">
+
+                                    <div>
+                                        <h6 className="mb-0">Queries</h6>
+
+                                        <small className="text-muted">
+                                            Total:{" "}
+                                            {data && getTotal(data.queries)}
+                                        </small>
+                                    </div>
+
+                                    <RefreshIcon
+                                        onClick={() => refreshChart("queries")}
+                                        isLoading={refreshing.queries}
                                     />
+
                                 </div>
-                                <div style={{ height: "200px" }}>
-                                    {data && <LineChartBox data={data.queries} xKey="name" />}
+
+                                <div style={{ height: "240px" }}>
+                                    {data && <PieChartBox data={data.queries} />}
+
                                 </div>
                             </div>
                         </div>
 
                         {/* Response Time */}
                         <div className="col-md-6">
-                            <div className="card p-3 shadow-sm d-flex flex-column">
-                                <div className="d-flex align-items-center mb-2">
-                                    <h6 className="mb-0">Response Time</h6>
-                                    <RefreshIcon 
-                                        onClick={() => refreshChart("response")} 
-                                        isLoading={refreshing.response} 
+                            <div className="card p-3 shadow-sm d-flex flex-column dashboard-card"
+                            >
+                                <div className="d-flex justify-content-between align-items-center mb-2">
+
+                                    <div>
+                                        <h6 className="mb-0">Response Time</h6>
+
+                                        <small className="text-muted">
+                                            Avg:{" "}
+                                            {data && getAverage(data.response)} ms
+                                        </small>
+                                    </div>
+
+                                    <RefreshIcon
+                                        onClick={() => refreshChart("response")}
+                                        isLoading={refreshing.response}
                                     />
+
                                 </div>
+
                                 <div style={{ height: "250px" }}>
-                                    {data && <LineChartBox data={data.response} xKey="date" />}
+                                    {data && (
+                                        <AreaChartBox
+                                            data={data.response}
+                                            xKey="date"
+                                        />
+                                    )}
+
                                 </div>
                             </div>
                         </div>
 
                         {/* Firewall Calls */}
                         <div className="col-md-6">
-                            <div className="card p-3 shadow-sm d-flex flex-column">
-                                <div className="d-flex align-items-center mb-2">
-                                    <h6 className="mb-0">Firewall Calls</h6>
-                                    <RefreshIcon 
-                                        onClick={() => refreshChart("firewall")} 
-                                        isLoading={refreshing.firewall} 
+                            <div className="card p-3 shadow-sm d-flex flex-column dashboard-card"
+                            >
+                                <div className="d-flex justify-content-between align-items-center mb-2">
+
+                                    <div>
+                                        <h6 className="mb-0">Firewall Calls</h6>
+
+                                        <small className="text-muted">
+                                            Total:{" "}
+                                            {data && getTotal(data.firewall)}
+                                        </small>
+                                    </div>
+
+                                    <RefreshIcon
+                                        onClick={() => refreshChart("firewall")}
+                                        isLoading={refreshing.firewall}
                                     />
+
                                 </div>
+
                                 <div style={{ height: "250px" }}>
                                     {data && <LineChartBox data={data.firewall} xKey="day" />}
                                 </div>

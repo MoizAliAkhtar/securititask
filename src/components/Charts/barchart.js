@@ -1,33 +1,27 @@
 import React from "react";
 import {
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
 
-function LineChartBox({ data, xKey }) {
+function BarChartBox({ data, xKey }) {
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <ResponsiveContainer>
-        <LineChart data={data}>
+        <BarChart data={data}>
           <XAxis dataKey={xKey} />
           <YAxis />
           <Tooltip />
-          <Line
-            type="monotone"
-            dataKey="value"
-            stroke="#4f46e5"
-            strokeWidth={2}
-            dot={false}
-          />
+          <Bar dataKey="value" fill="#22c55e" radius={[6, 6, 0, 0]} />
 
-        </LineChart>
+        </BarChart>
       </ResponsiveContainer>
     </div>
   );
 }
 
-export default LineChartBox;
+export default BarChartBox;

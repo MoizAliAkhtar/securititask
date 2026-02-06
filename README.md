@@ -21,7 +21,7 @@ The dashboard allows users to filter data by time range, refresh individual sect
 Follow the steps below to run the project locally.
 
  1. Clone the Repository
-    git clone https://github.com/your-username/your-repo-name.git
+    git clone https://github.com/MoizAliAkhtar/securititask.git
     
 2. Navigate to Project Directory
    cd your-repo-name

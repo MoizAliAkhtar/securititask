@@ -10,17 +10,36 @@ import {
 
 function BarChartBox({ data, xKey }) {
   return (
-    <div style={{ width: "100%", height: "100%" }}>
-      <ResponsiveContainer>
-        <BarChart data={data}>
-          <XAxis dataKey={xKey} />
-          <YAxis />
-          <Tooltip />
-          <Bar dataKey="value" fill="#22c55e" radius={[6, 6, 0, 0]} />
+    <ResponsiveContainer width="100%" height="100%">
 
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
+      <BarChart
+        data={data}
+        margin={{ top: 10, right: 20, left: 0, bottom: 5 }}
+        barCategoryGap="30%"
+      >
+        <XAxis
+          dataKey={xKey}
+          type="category"
+          interval={0}
+          angle={-10}
+          textAnchor="end"
+          height={60}
+        />
+
+        <YAxis />
+
+        <Tooltip />
+
+        <Bar
+          dataKey="value"
+          barSize={6}
+          radius={[6, 6, 0, 0]}
+          fill="#0d6efd"
+        />
+
+      </BarChart>
+
+    </ResponsiveContainer>
   );
 }
 

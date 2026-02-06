@@ -108,12 +108,6 @@ function PieChartBox({ data }) {
           </div>
         ))}
 
-        <hr />
-
-        <div className="text-center fw-bold text-primary">
-          Total: {total}
-        </div>
-
       </div>
     </div>
   );

@@ -127,17 +127,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   background: white;
-
   padding: 16px 24px;
-
   border-radius: 14px;
-
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-
   margin-bottom: 20px;
-
 }
 
 /* Right Controls */
@@ -216,3 +210,117 @@
 .refresh-btn:active {
   transform: scale(0.97);
 }
+
+/* Users KPI Section */
+
+.user-stats {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items:flex-start;
+  height: 200px;
+  padding: 10px 5px;
+}
+
+.stat-box {
+  text-align: center;
+  flex: 1;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-weight: 700;
+  font-size: 1.6rem;
+}
+
+/* ===== Users Card Styling ===== */
+
+.users-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.users-indicator {
+  width: 4px;
+  height: 18px;
+  background-color: #22c55e; /* Green */
+  border-radius: 2px;
+}
+
+.users-title {
+  font-weight: 700; /* Bold */
+  color: #000; /* Black */
+}
+
+.users-subtext {
+  color: #000; /* Black */
+  font-weight: 500;
+}
+
+/* User stats text color */
+.user-stats .stat-label {
+  color: #000;
+  font-weight: 500;
+}
+
+.user-stats .stat-value {
+  font-weight: 700;
+  margin-left: -20px;
+}
+
+/* ===== General Card Titles ===== */
+
+.card-title-bold {
+  font-weight: 700;
+  color: #000;
+}
+
+/* Card Sub Text */
+
+.card-subtext {
+  color: #000;
+  font-weight: 500;
+}
+
+
+/* ===== Card Title with Indicator ===== */
+
+.card-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Base Indicator */
+
+.indicator {
+  width: 4px;
+  height: 35px;
+  border-radius: 2px;
+}
+
+/* Colors */
+
+.indicator-blue {
+  background-color: #0d6efd;
+}
+
+.indicator-purple {
+  background-color: #a855f7;
+}
+
+.indicator-orange {
+  
+  background-color: #06b6d4;
+}
+
+.indicator-teal {
+  background-color: #f97316;
+}
+

@@ -13,7 +13,6 @@ import {
     FaBell,
     FaPlug,
     FaCog,
-    FaQuestionCircle,
     FaUser,
 } from "react-icons/fa";
 
@@ -48,7 +47,7 @@ function Dashboard() {
     }, []);
 
     const filterByDays = (data, days) => {
-        const now = new Date("2024-01-30");
+        const now = new Date("Jan-24");
         return data.filter((item) => {
             const itemDate = new Date(item.date);
             const diff = (now - itemDate) / (1000 * 60 * 60 * 24);
@@ -56,7 +55,6 @@ function Dashboard() {
         });
     };
 
-    // Function to refresh a specific chart
     const refreshChart = async (chartName) => {
         setRefreshing(prev => ({ ...prev, [chartName]: true }));
         try {
@@ -69,7 +67,6 @@ function Dashboard() {
         }
     };
 
-    // Small refresh icon component
     const RefreshIcon = ({ onClick, isLoading }) => (
         <button
             className="btn btn-sm btn-outline-primary ms-auto"
@@ -85,10 +82,8 @@ function Dashboard() {
         </button>
     );
 
-    // Calculate total from chart data
     const getTotal = (arr) => {
         if (!arr || arr.length === 0) return 0;
-
         return arr.reduce((sum, item) => sum + item.value, 0);
     };
 
@@ -101,17 +96,27 @@ function Dashboard() {
         ).toFixed(1);
     };
 
+    const getActiveInactiveUsers = (arr) => {
+        if (!arr || arr.length === 0)
+            return { active: 0, inactive: 0 };
+
+        const total = getTotal(arr);
+
+        const active = Math.floor(total * 0.7);
+        const inactive = total - active;
+
+        return { total, active, inactive };
+    };
+
+
     return (
         <div className="d-flex min-vh-100">
+
             {/* Sidebar */}
             <aside className="sidebar">
 
-                {/* Logo */}
-                <div className="sidebar-logo">
-                    A
-                </div>
+                <div className="sidebar-logo">A</div>
 
-                {/* Menu */}
                 <ul className="sidebar-menu">
 
                     <li className="sidebar-item active">
@@ -141,7 +146,6 @@ function Dashboard() {
 
                 </ul>
 
-                {/* Bottom */}
                 <div className="sidebar-bottom">
 
                     <div className="sidebar-item">
@@ -158,9 +162,14 @@ function Dashboard() {
 
             </aside>
 
-            {/* Main content */}
+            {/* Main */}
             <div className="flex-grow-1 p-4 bg-light">
-                <Header onRefresh={loadData} range={range} onRangeChange={setRange} />
+
+                <Header
+                    onRefresh={loadData}
+                    range={range}
+                    onRangeChange={setRange}
+                />
 
                 {loading && (
                     <div className="text-center my-5">
@@ -168,6 +177,7 @@ function Dashboard() {
                         <p>Loading dashboard...</p>
                     </div>
                 )}
+
                 {error && (
                     <div className="alert alert-danger text-center">
                         {error}
@@ -177,20 +187,25 @@ function Dashboard() {
                 <div className="container-fluid mt-3">
                     <div className="row g-4">
 
+
                         {/* Users */}
-                        <div className="col-md-6">
-                            <div className="card p-3 shadow-sm d-flex flex-column dashboard-card"
-                            >
+                        <div className="col-md-6" style={{ width: "30%" }}>
+
+                            <div className="card p-3 shadow-sm d-flex flex-column dashboard-card">
+
                                 <div className="d-flex justify-content-between align-items-center mb-2">
 
-                                    <div>
-                                        <h6 className="mb-0">Users</h6>
+                                    <div className="card-header-block">
 
-                                        <small className="text-muted">
-                                            Total:{" "}
-                                            {data &&
-                                                getTotal(filterByDays(data.users, range))}
+                                        <div className="card-title-wrapper">
+                                            <span className="users-indicator"></span>
+                                            <h6 className="users-title mb-0">Users</h6>
+                                        </div>
+
+                                        <small className="users-subtext">
+                                            Total: {data && getTotal(filterByDays(data.users, range))}
                                         </small>
+
                                     </div>
 
                                     <RefreshIcon
@@ -199,25 +214,63 @@ function Dashboard() {
                                     />
 
                                 </div>
-                                <div style={{ height: "200px" }}>
-                                    {data && <LineChartBox data={filterByDays(data.users, range)} xKey="date" />}
-                                </div>
+
+
+                                {data && (() => {
+                                    const stats = getActiveInactiveUsers(
+                                        filterByDays(data.users, range)
+                                    );
+
+                                    return (
+                                        <div className="user-stats">
+
+                                            <div className="stat-box">
+                                                <h2 className="stat-label">Total Users</h2>
+                                                <h4 className="stat-value text-black">
+                                                    {stats.total}
+                                                </h4>
+                                            </div>
+
+                                            <div className="stat-box">
+                                                <p className="stat-label">Active Users</p>
+                                                <h4 className="stat-value text-black">
+                                                    {stats.active}
+                                                </h4>
+                                            </div>
+
+                                            <div className="stat-box">
+                                                <p className="stat-label">Inactive Users</p>
+                                                <h4 className="stat-value text-black">
+                                                    {stats.inactive}
+                                                </h4>
+                                            </div>
+
+                                        </div>
+                                    );
+                                })()}
+
                             </div>
                         </div>
 
+
                         {/* Logins */}
-                        <div className="col-md-6">
+                        <div className="col-md-6" style={{ width: "70%" }}>
+
                             <div className="card p-3 shadow-sm d-flex flex-column">
+
                                 <div className="d-flex justify-content-between align-items-center mb-2">
 
-                                    <div>
-                                        <h6 className="mb-0">Logins</h6>
+                                    <div className="card-header-block">
 
-                                        <small className="text-muted">
-                                            Total:{" "}
-                                            {data &&
-                                                getTotal(filterByDays(data.logins, range))}
+                                        <div className="card-title-wrapper">
+                                            <span className="indicator indicator-blue"></span>
+                                            <h6 className="card-title-bold mb-0">Logins</h6>
+                                        </div>
+
+                                        <small className="card-subtext">
+                                            Total: {data && getTotal(filterByDays(data.logins, range))}
                                         </small>
+
                                     </div>
 
                                     <RefreshIcon
@@ -227,6 +280,7 @@ function Dashboard() {
 
                                 </div>
 
+
                                 <div style={{ height: "200px" }}>
                                     {data && (
                                         <BarChartBox
@@ -234,24 +288,30 @@ function Dashboard() {
                                             xKey="date"
                                         />
                                     )}
-
                                 </div>
+
                             </div>
                         </div>
 
+
                         {/* Queries */}
-                        <div className="col-md-6 offset-md-3">
-                            <div className="card p-3 shadow-sm d-flex flex-column dashboard-card"
-                            >
+                        <div className="col-md-6">
+
+                            <div className="card p-3 shadow-sm d-flex flex-column dashboard-card">
+
                                 <div className="d-flex justify-content-between align-items-center mb-2">
 
-                                    <div>
-                                        <h6 className="mb-0">Queries</h6>
+                                    <div className="card-header-block">
 
-                                        <small className="text-muted">
-                                            Total:{" "}
-                                            {data && getTotal(data.queries)}
+                                        <div className="card-title-wrapper">
+                                            <span className="indicator indicator-purple"></span>
+                                            <h6 className="card-title-bold mb-0">Queries</h6>
+                                        </div>
+
+                                        <small className="card-subtext">
+                                            Total: {data && getTotal(data.queries)}
                                         </small>
+
                                     </div>
 
                                     <RefreshIcon
@@ -261,60 +321,33 @@ function Dashboard() {
 
                                 </div>
 
+
                                 <div style={{ height: "240px" }}>
                                     {data && <PieChartBox data={data.queries} />}
-
                                 </div>
+
                             </div>
                         </div>
 
-                        {/* Response Time */}
+
+                        {/* Firewall */}
                         <div className="col-md-6">
-                            <div className="card p-3 shadow-sm d-flex flex-column dashboard-card"
-                            >
+
+                            <div className="card p-3 shadow-sm d-flex flex-column dashboard-card">
+
                                 <div className="d-flex justify-content-between align-items-center mb-2">
 
-                                    <div>
-                                        <h6 className="mb-0">Response Time</h6>
+                                    <div className="card-header-block">
 
-                                        <small className="text-muted">
-                                            Avg:{" "}
-                                            {data && getAverage(data.response)} ms
+                                        <div className="card-title-wrapper">
+                                            <span className="indicator indicator-orange"></span>
+                                            <h6 className="card-title-bold mb-0">Firewall Calls</h6>
+                                        </div>
+
+                                        <small className="card-subtext">
+                                            Total: {data && getTotal(data.firewall)}
                                         </small>
-                                    </div>
 
-                                    <RefreshIcon
-                                        onClick={() => refreshChart("response")}
-                                        isLoading={refreshing.response}
-                                    />
-
-                                </div>
-
-                                <div style={{ height: "250px" }}>
-                                    {data && (
-                                        <AreaChartBox
-                                            data={data.response}
-                                            xKey="date"
-                                        />
-                                    )}
-
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Firewall Calls */}
-                        <div className="col-md-6">
-                            <div className="card p-3 shadow-sm d-flex flex-column dashboard-card"
-                            >
-                                <div className="d-flex justify-content-between align-items-center mb-2">
-
-                                    <div>
-                                        <h6 className="mb-0">Firewall Calls</h6>
-
-                                        <small className="text-muted">
-                                            Total:{" "}
-                                            {data && getTotal(data.firewall)}
-                                        </small>
                                     </div>
 
                                     <RefreshIcon
@@ -324,14 +357,59 @@ function Dashboard() {
 
                                 </div>
 
-                                <div style={{ height: "250px" }}>
+
+                                <div style={{ height: "240px" }}>
                                     {data && <LineChartBox data={data.firewall} xKey="day" />}
                                 </div>
+
                             </div>
                         </div>
 
+
+                        {/* Response */}
+                        <div className="col-md-6" style={{ width: "100%" }}>
+
+                            <div className="card p-3 shadow-sm d-flex flex-column dashboard-card">
+
+                                <div className="d-flex justify-content-between align-items-center mb-2">
+
+                                    <div className="card-header-block">
+
+                                        <div className="card-title-wrapper">
+                                            <span className="indicator indicator-teal"></span>
+                                            <h6 className="card-title-bold mb-0">Response Time</h6>
+                                        </div>
+
+                                        <small className="card-subtext">
+                                            Avg: {data && getAverage(data.response)} ms
+                                        </small>
+
+                                    </div>
+
+                                    <RefreshIcon
+                                        onClick={() => refreshChart("response")}
+                                        isLoading={refreshing.response}
+                                    />
+
+                                </div>
+
+
+                                <div style={{ height: "250px" }}>
+                                    {data && (
+                                        <AreaChartBox
+                                            data={data.response}
+                                            xKey="date"
+                                        />
+                                    )}
+                                </div>
+
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
+
             </div>
         </div>
     );

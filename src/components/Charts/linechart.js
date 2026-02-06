@@ -19,7 +19,7 @@ function LineChartBox({ data, xKey }) {
           <Line
             type="monotone"
             dataKey="value"
-            stroke="#4f46e5"
+            stroke="#06b6d4"
             strokeWidth={2}
             dot={false}
           />

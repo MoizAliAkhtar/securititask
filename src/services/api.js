@@ -19,21 +19,16 @@ function simulateDelay(data, fail = false) {
   });
 }
 
-// Fake API
-export const fetchDashboardData = () => {
-  return Promise.all([
-    simulateDelay(usersData),
-    simulateDelay(loginData),
-    simulateDelay(queryData),
-    simulateDelay(responseTimeData),
-    simulateDelay(firewallData),
-  ]).then(
-    ([users, logins, queries, response, firewall]) => ({
-      users,
-      logins,
-      queries,
-      response,
-      firewall,
-    })
-  );
+export const fetchDashboardData = async () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        users: usersData,
+        logins: loginData,
+        queries: queryData,
+        response: responseTimeData,
+        firewall: firewallData,
+      });
+    }, 500);
+  });
 };

@@ -8,7 +8,7 @@ function Header({ onRefresh, range, onRangeChange }) {
       {/* Left Section */}
       <div>
         <h4 className="mb-0 fw-bold">Analytics Dashboard</h4>
-        <small className="text-muted">
+        <small className="text-muted" style={{marginLeft:"-53px"}}>
           Monitor system performance
         </small>
       </div>

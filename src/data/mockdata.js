@@ -11,18 +11,18 @@ export const usersData = [
 ];
 
 export const loginData = [
-  { date: "Jan-24", value: 40 },
-  { date: "Feb-24", value: 60 },
-  { date: "Mar-24", value: 55 },
-  { date: "Apr-24", value: 80 },
-  { date: "May-24", value: 70 },
-  { date: "Jun-24", value: 90 },
-  { date: "Jul-24", value: 65 },
-  { date: "Aug-24", value: 29 },
-  { date: "Sep-24", value: 15 },
-  { date: "Oct-24", value: 44 },
-  { date: "Nov-24", value: 55 },
-  { date: "Dec-24", value: 70 },
+  { date: "Feb-25", value: 40 },
+  { date: "Mar-25", value: 60 },
+  { date: "Apr-25", value: 55 },
+  { date: "May-25", value: 80 },
+  { date: "Jun-25", value: 70 },
+  { date: "Jul-25", value: 90 },
+  { date: "Aug-25", value: 65 },
+  { date: "Nov-25", value: 29 },
+  { date: "Oct-25", value: 15 },
+  { date: "Dec-25", value: 44 },
+  { date: "Jan-26", value: 55 },
+  { date: "Feb-26", value: 70 },
 ];
 
 

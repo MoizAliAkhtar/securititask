@@ -47,13 +47,38 @@ function Dashboard() {
     }, []);
 
     const filterByDays = (data, days) => {
-        const now = new Date("Jan-24");
+        if (!data || data.length === 0) return [];
+
+        const now = new Date();
+
         return data.filter((item) => {
-            const itemDate = new Date(item.date);
+
+            let itemDate;
+
+            // Case 1: Full date (2024-01-01)
+            if (/^\d{4}-\d{2}-\d{2}$/.test(item.date)) {
+                itemDate = new Date(item.date);
+            }
+
+            // Case 2: Month-Year (Jan-24)
+            else if (/^[A-Za-z]{3}-\d{2}$/.test(item.date)) {
+                const [mon, yr] = item.date.split("-");
+                itemDate = new Date(`20${yr}-${mon}-01`);
+            }
+
+            // Case 3: Week / Day / Other → Don't filter
+            else {
+                return true;
+            }
+
+            if (isNaN(itemDate)) return true;
+
             const diff = (now - itemDate) / (1000 * 60 * 60 * 24);
+
             return diff <= days;
         });
     };
+
 
     const refreshChart = async (chartName) => {
         setRefreshing(prev => ({ ...prev, [chartName]: true }));
@@ -108,7 +133,6 @@ function Dashboard() {
         return { total, active, inactive };
     };
 
-
     return (
         <div className="d-flex min-vh-100">
 
@@ -123,43 +147,34 @@ function Dashboard() {
                         <FaChartPie />
                         <span>Dashboard</span>
                     </li>
-
                     <li className="sidebar-item">
                         <FaChartLine />
                         <span>Analytics</span>
                     </li>
-
                     <li className="sidebar-item">
                         <FaFileAlt />
                         <span>Reports</span>
                     </li>
-
                     <li className="sidebar-item">
                         <FaBell />
                         <span>Alerts</span>
                     </li>
-
                     <li className="sidebar-item">
                         <FaPlug />
                         <span>Integrations</span>
                     </li>
-
                 </ul>
 
                 <div className="sidebar-bottom">
-
                     <div className="sidebar-item">
                         <FaCog />
                         <span>Settings</span>
                     </div>
-
                     <div className="sidebar-item">
                         <FaUser />
                         <span>Profile</span>
                     </div>
-
                 </div>
-
             </aside>
 
             {/* Main */}
@@ -187,10 +202,8 @@ function Dashboard() {
                 <div className="container-fluid mt-3">
                     <div className="row g-4">
 
-
                         {/* Users */}
                         <div className="col-md-6" style={{ width: "30%" }}>
-
                             <div className="card p-3 shadow-sm d-flex flex-column dashboard-card">
 
                                 <div className="d-flex justify-content-between align-items-center mb-2">
@@ -202,8 +215,9 @@ function Dashboard() {
                                             <h6 className="users-title mb-0">Users</h6>
                                         </div>
 
-                                        <small className="users-subtext">
-                                            Total: {data && getTotal(filterByDays(data.users, range))}
+                                        <small className="users-subtext" style={{ marginLeft: "10px" }}>
+                                           Total: {data && getTotal(data.users)}
+
                                         </small>
 
                                     </div>
@@ -212,14 +226,11 @@ function Dashboard() {
                                         onClick={() => refreshChart("users")}
                                         isLoading={refreshing.users}
                                     />
-
                                 </div>
 
-
                                 {data && (() => {
-                                    const stats = getActiveInactiveUsers(
-                                        filterByDays(data.users, range)
-                                    );
+                                    const stats = getActiveInactiveUsers(data.users);
+
 
                                     return (
                                         <div className="user-stats">
@@ -256,7 +267,7 @@ function Dashboard() {
                         {/* Logins */}
                         <div className="col-md-6" style={{ width: "70%" }}>
 
-                            <div className="card p-3 shadow-sm d-flex flex-column">
+                            <div className="card p-3 shadow-sm d-flex flex-column dashboard-card">
 
                                 <div className="d-flex justify-content-between align-items-center mb-2">
 
@@ -267,7 +278,7 @@ function Dashboard() {
                                             <h6 className="card-title-bold mb-0">Logins</h6>
                                         </div>
 
-                                        <small className="card-subtext">
+                                        <small className="card-subtext" style={{ marginLeft: "10px" }}>
                                             Total: {data && getTotal(filterByDays(data.logins, range))}
                                         </small>
 
@@ -279,7 +290,6 @@ function Dashboard() {
                                     />
 
                                 </div>
-
 
                                 <div style={{ height: "200px" }}>
                                     {data && (
@@ -308,8 +318,8 @@ function Dashboard() {
                                             <h6 className="card-title-bold mb-0">Queries</h6>
                                         </div>
 
-                                        <small className="card-subtext">
-                                            Total: {data && getTotal(data.queries)}
+                                        <small className="card-subtext" style={{ marginLeft: "10px" }}>
+                                            Total: {data && getTotal(filterByDays(data.queries, range))}
                                         </small>
 
                                     </div>
@@ -318,12 +328,14 @@ function Dashboard() {
                                         onClick={() => refreshChart("queries")}
                                         isLoading={refreshing.queries}
                                     />
-
                                 </div>
 
-
                                 <div style={{ height: "240px" }}>
-                                    {data && <PieChartBox data={data.queries} />}
+                                    {data && (
+                                        <PieChartBox
+                                            data={filterByDays(data.queries, range)}
+                                        />
+                                    )}
                                 </div>
 
                             </div>
@@ -344,8 +356,8 @@ function Dashboard() {
                                             <h6 className="card-title-bold mb-0">Firewall Calls</h6>
                                         </div>
 
-                                        <small className="card-subtext">
-                                            Total: {data && getTotal(data.firewall)}
+                                        <small className="card-subtext" style={{ marginLeft: "-10px" }}>
+                                            Total: {data && getTotal(filterByDays(data.firewall, range))}
                                         </small>
 
                                     </div>
@@ -357,9 +369,13 @@ function Dashboard() {
 
                                 </div>
 
-
                                 <div style={{ height: "240px" }}>
-                                    {data && <LineChartBox data={data.firewall} xKey="day" />}
+                                    {data && (
+                                        <LineChartBox
+                                            data={filterByDays(data.firewall, range)}
+                                            xKey="day"
+                                        />
+                                    )}
                                 </div>
 
                             </div>
@@ -380,8 +396,8 @@ function Dashboard() {
                                             <h6 className="card-title-bold mb-0">Response Time</h6>
                                         </div>
 
-                                        <small className="card-subtext">
-                                            Avg: {data && getAverage(data.response)} ms
+                                        <small className="card-subtext" style={{ marginLeft: "-15px" }}>
+                                            Avg: {data && getAverage(filterByDays(data.response, range))} ms
                                         </small>
 
                                     </div>
@@ -393,11 +409,10 @@ function Dashboard() {
 
                                 </div>
 
-
                                 <div style={{ height: "250px" }}>
                                     {data && (
                                         <AreaChartBox
-                                            data={data.response}
+                                            data={filterByDays(data.response, range)}
                                             xKey="date"
                                         />
                                     )}
@@ -405,7 +420,6 @@ function Dashboard() {
 
                             </div>
                         </div>
-
 
                     </div>
                 </div>

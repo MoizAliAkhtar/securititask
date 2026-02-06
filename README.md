@@ -1,70 +1,99 @@
-# Getting Started with Create React App
+📊 Analytics Dashboard
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**Project Overview**
 
-## Available Scripts
+This project is a responsive analytics dashboard built using React.  
+It displays key metrics such as users, logins, queries, firewall activity, and response time using interactive charts.
+The dashboard allows users to filter data by time range, refresh individual sections, and view insights in a clean and modern UI.
 
-In the project directory, you can run:
+**Tech Stack**
 
-### `npm start`
+**Frontend:** React.js
+**Styling:** Bootstrap, Custom CSS
+**Charts:** Recharts
+**Icons:** React Icons
+**State Management:** React Hooks (useState, useEffect)
+**API:** Mock API / Simulated Backend Data
+**Version Control:** Git & GitHub
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+**Setup Instructions**
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Follow the steps below to run the project locally.
 
-### `npm test`
+ 1. Clone the Repository
+    git clone https://github.com/your-username/your-repo-name.git
+    
+2. Navigate to Project Directory
+   cd your-repo-name
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+3. Install Dependencies
+   npm install
 
-### `npm run build`
+4. Start Development Server
+   npm start
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The application will run on:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+http://localhost:3000
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+**Key Decisions and Trade-offs**
 
-### `npm run eject`
+1. React for Frontend
+React was chosen for its component-based architecture and reusability.
+This allowed better separation of charts, header, and sidebar components.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Trade-off:
+React has a learning curve and setup overhead compared to plain HTML/CSS.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+2. Recharts for Data Visualization
+Recharts was used to build Line, Bar, Pie, and Area charts because.
+Easy integration with React
+Good documentation
+Responsive charts
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Trade-off:
+Limited customization compared to advanced libraries like D3.js
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+3. Mock API Instead of Real Backend
+Mock data was used to simulate backend responses as,
+Backend was not required for this task
 
-## Learn More
+Trade-off:
+No real-time or persistent data
+No authentication
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+4. Bootstrap for Layout
+Bootstrap was used for grid and responsiveness because of
+Quick layout development
+Mobile-friendly design
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Trade-off:
+Less design flexibility than pure custom CSS
 
-### Code Splitting
+5. Client-side Filtering
+Date filtering is handled on the frontend because 
+No backend available
+Simple implementation
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Trade-off:
+Not scalable for very large datasets
 
-### Analyzing the Bundle Size
+**What I Would Improve With More Time**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+If given more time, I can try to implement:
 
-### Making a Progressive Web App
+1.Backend Integration (Laravel)
+2.User Authentication & Authorization
+3.Dark Mode Support
+4.Export Reports (PDF / Excel)
+5.Improved Error Handling
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+**Approximate Time Spent**
+Task	Time Spent is as 
+approxiametly 2 days for development and one day for documetation and other finishing work <img width="943" height="336" alt="image" src="https://github.com/user-attachments/assets/1320a870-3233-443d-9a0b-dc018c786399" />
 
-### Advanced Configuration
+<img width="943" height="440" alt="image" src="https://github.com/user-attachments/assets/b749888c-935e-43a2-a920-463fd8fa27af" />
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+<img width="947" height="443" alt="image" src="https://github.com/user-attachments/assets/9cdc057c-b9e8-4055-8eb5-5de4b4348447" />
 
-### Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
